@@ -1,5 +1,7 @@
 ﻿using GeekShopping.Api.Data.ValueObjects;
 using GeekShopping.Api.Repository;
+using GeekShopping.Api.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GeekShopping.Api.Controllers
@@ -14,6 +16,7 @@ namespace GeekShopping.Api.Controllers
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductVO>>> FindAll()
         {
@@ -21,6 +24,7 @@ namespace GeekShopping.Api.Controllers
             return Ok(products);
         }
 
+        [Authorize]
         [HttpGet("category")]
         public async Task<ActionResult<IEnumerable<ProductVO>>> FindAllWithCategories()
         {
@@ -28,6 +32,7 @@ namespace GeekShopping.Api.Controllers
             return Ok(products);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductVO>> FindById(int id)
         {
@@ -36,6 +41,7 @@ namespace GeekShopping.Api.Controllers
             return Ok(product);
         }
 
+        [Authorize]
         [HttpGet("{id}/category")]
         public async Task<ActionResult<ProductVO>> FindByIdWithCategory(int id)
         {
@@ -44,6 +50,7 @@ namespace GeekShopping.Api.Controllers
             return Ok(product);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ProductVO>> Create([FromBody] ProductVO productVO)
         {
@@ -52,6 +59,7 @@ namespace GeekShopping.Api.Controllers
             return Ok(product);
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult<ProductVO>> Update([FromBody] ProductVO productVO)
         {
@@ -60,6 +68,7 @@ namespace GeekShopping.Api.Controllers
             return Ok(product);
         }
 
+        [Authorize(Roles = Role.Admin)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

@@ -1,5 +1,8 @@
 ﻿using GeekShopping.Web.Models;
 using GeekShopping.Web.Services.IServices;
+using GeekShopping.Web.Utils;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -16,24 +19,29 @@ public class ProductController : Controller
         _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
     }
 
+    [Authorize]
     public async Task<IActionResult> ProductIndex()
     {
-        var products = await _productService.FindAllWithCategory();
+        var token = await HttpContext.GetTokenAsync("access_token");
+        var products = await _productService.FindAllWithCategory(token);
         return View(products);
     }
 
     public async Task<IActionResult> ProductCreate()
     {
-        ViewBag.CategoryId = new SelectList(await _categoryService.FindAll(), "CategoryId", "Name");
+        var token = await HttpContext.GetTokenAsync("access_token");
+        ViewBag.CategoryId = new SelectList(await _categoryService.FindAll(token), "CategoryId", "Name");
         return View();
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> ProductCreate(ProductModel model)
     {
         if (ModelState.IsValid)
         {
-            var response = await _productService.Create(model);
+            var token = await HttpContext.GetTokenAsync("access_token");
+            var response = await _productService.Create(model, token);
             if (response != null) return RedirectToAction(nameof(ProductIndex));
         }
         return View(model);
@@ -41,19 +49,22 @@ public class ProductController : Controller
 
     public async Task<IActionResult> ProductUpdate(int id)
     {
-        ViewBag.CategoryId = new SelectList(await _categoryService.FindAll(), "CategoryId", "Name");
-        var product = await _productService.FindById(id);
+        var token = await HttpContext.GetTokenAsync("access_token");
+        ViewBag.CategoryId = new SelectList(await _categoryService.FindAll(token), "CategoryId", "Name");
+        var product = await _productService.FindById(id, token);
         if(product != null) return View(product);
         return NotFound();
 
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> ProductUpdate(ProductModel model)
     {
         if (ModelState.IsValid)
         {
-            var response = await _productService.Update(model);
+            var token = await HttpContext.GetTokenAsync("access_token");
+            var response = await _productService.Update(model, token);
             if (response != null) return RedirectToAction(nameof(ProductIndex));
         }
         return View(model);
@@ -61,19 +72,22 @@ public class ProductController : Controller
 
     public async Task<IActionResult> ProductDelete(int id)
     {
-        ViewBag.CategoryId = new SelectList(await _categoryService.FindAll(), "CategoryId", "Name");
-        var product = await _productService.FindById(id);
+        var token = await HttpContext.GetTokenAsync("access_token");
+        ViewBag.CategoryId = new SelectList(await _categoryService.FindAll(token), "CategoryId", "Name");
+        var product = await _productService.FindById(id, token);
         if (product != null) return View(product);
         return NotFound();
 
     }
 
+    [Authorize(Roles = Role.Admin)]
     [HttpPost]
     public async Task<IActionResult> ProductDelete(ProductModel model)
     {
         if (ModelState.IsValid)
         {
-            var response = await _productService.DeleteById(model.ProductId);
+            var token = await HttpContext.GetTokenAsync("access_token");
+            var response = await _productService.DeleteById(model.ProductId, token);
             if (response) return RedirectToAction(nameof(ProductIndex));
         }
         return View(model);
