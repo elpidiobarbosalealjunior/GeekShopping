@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GeekShopping.Api.Model;
+namespace GeekShopping.ProductApi.Model;
 
 [Table("category")]
 public class Category

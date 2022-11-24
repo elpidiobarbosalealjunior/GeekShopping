@@ -18,6 +18,7 @@ namespace GeekShopping.Web
             // Add services to the container.
             builder.Services.AddHttpClient<IProductService, ProductService>(c => c.BaseAddress = new Uri(builder.Configuration["ServicesUrls:ProductAPI"]));
             builder.Services.AddHttpClient<ICategoryService, CategoryService>(c => c.BaseAddress = new Uri(builder.Configuration["ServicesUrls:ProductAPI"]));
+            builder.Services.AddHttpClient<ICartService, CartService>(c => c.BaseAddress = new Uri(builder.Configuration["ServicesUrls:CartApi"]));
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddAuthentication(options =>

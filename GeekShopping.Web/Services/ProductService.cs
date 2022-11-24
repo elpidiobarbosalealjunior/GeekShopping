@@ -15,48 +15,50 @@ public class ProductService : IProductService
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
-    public async Task<IEnumerable<ProductModel>> FindAll(string token)
+    public async Task<IEnumerable<ProductViewModel>> FindAll(string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.GetAsync(BasePath);
-        return await response.ReadContentAs<List<ProductModel>>();
+        return await response.ReadContentAs<List<ProductViewModel>>();
     }
 
-    public async Task<IEnumerable<ProductModel>> FindAllWithCategory(string token)
+    public async Task<IEnumerable<ProductViewModel>> FindAllWithCategory(string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.GetAsync($"{BasePath}/category");
-        return await response.ReadContentAs<List<ProductModel>>();
+        return await response.ReadContentAs<List<ProductViewModel>>();
     }
 
-    public async Task<ProductModel> FindById(int id, string token)
+    public async Task<ProductViewModel> FindById(int id, string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.GetAsync($"{BasePath}/{id}");
-        return await response.ReadContentAs<ProductModel>();
+        return await response.ReadContentAs<ProductViewModel>();
     }
 
-    public Task<ProductModel> FindByIdWithCategory(int id, string token)
+    public async Task<ProductViewModel> FindByIdWithCategory(int id, string token)
     {
-        throw new NotImplementedException();
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await _httpClient.GetAsync($"{BasePath}/{id}/category");
+        return await response.ReadContentAs<ProductViewModel>();
     }
 
-    public async Task<ProductModel> Create(ProductModel model, string token)
+    public async Task<ProductViewModel> Create(ProductViewModel model, string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.PostAsJson(BasePath, model);
         if (response.IsSuccessStatusCode)
-            return await response.ReadContentAs<ProductModel>();
+            return await response.ReadContentAs<ProductViewModel>();
         else
             throw new Exception("Something went wrong when calling API");
     }
 
-    public async Task<ProductModel> Update(ProductModel model, string token)
+    public async Task<ProductViewModel> Update(ProductViewModel model, string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.PutAsJson(BasePath, model);
         if (response.IsSuccessStatusCode)
-            return await response.ReadContentAs<ProductModel>();
+            return await response.ReadContentAs<ProductViewModel>();
         else
             throw new Exception("Something went wrong when calling API");
     }

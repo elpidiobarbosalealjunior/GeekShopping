@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace GeekShopping.Api.Model.Context;
+namespace GeekShopping.ProductApi.Model.Context;
 
 public class MySQLContext : DbContext
 {

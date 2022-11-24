@@ -1,7 +1,7 @@
 using AutoMapper;
-using GeekShopping.Api.Configuration;
-using GeekShopping.Api.Model.Context;
-using GeekShopping.Api.Repository;
+using GeekShopping.ProductApi.Configuration;
+using GeekShopping.ProductApi.Model.Context;
+using GeekShopping.ProductApi.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;

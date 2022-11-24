@@ -1,6 +1,6 @@
 ﻿namespace GeekShopping.Web.Models;
 
-public class CategoryModel
+public class CategoryViewModel
 {
     public int CategoryId { get; set; }
     public string? Name { get; set; }

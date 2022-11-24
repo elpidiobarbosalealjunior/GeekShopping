@@ -1,16 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace GeekShopping.CartAPI.Data.ValueObjects;
 
-namespace GeekShopping.Web.Models;
-
-public class ProductModel
+public class ProductVO
 {
     public int ProductId { get; set; }
     public string? Name { get; set; }
     public decimal Price { get; set; }
     public string? Description { get; set; }
     public int Stock { get; set; }
-    public string? ImageUrl { get; set; }
-    [Display(Name = "Category")]
+    public string? ImageURL { get; set; }
     public int CategoryId { get; set; }
-    public CategoryModel? Category { get; set; }
+    public virtual CategoryVO? Category { get; set; }
 }
+

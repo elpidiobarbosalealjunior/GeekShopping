@@ -14,36 +14,36 @@ public class CategoryService : ICategoryService
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
-    public async Task<IEnumerable<CategoryModel>> FindAll(string token)
+    public async Task<IEnumerable<CategoryViewModel>> FindAll(string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.GetAsync(BasePath);
-        return await response.ReadContentAs<List<CategoryModel>>();
+        return await response.ReadContentAs<List<CategoryViewModel>>();
     }
 
-    public async Task<CategoryModel> FindById(int id, string token)
+    public async Task<CategoryViewModel> FindById(int id, string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.GetAsync($"{BasePath}/{id}");
-        return await response.ReadContentAs<CategoryModel>();
+        return await response.ReadContentAs<CategoryViewModel>();
     }
 
-    public async Task<CategoryModel> Create(CategoryModel model, string token)
+    public async Task<CategoryViewModel> Create(CategoryViewModel model, string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.PostAsJson(BasePath, model);
         if (response.IsSuccessStatusCode)
-            return await response.ReadContentAs<CategoryModel>();
+            return await response.ReadContentAs<CategoryViewModel>();
         else
             throw new Exception("Something went wrong when calling API");
     }
 
-    public async Task<CategoryModel> Update(CategoryModel model, string token)
+    public async Task<CategoryViewModel> Update(CategoryViewModel model, string token)
     {
         _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.PutAsJson(BasePath, model);
         if (response.IsSuccessStatusCode)
-            return await response.ReadContentAs<CategoryModel>();
+            return await response.ReadContentAs<CategoryViewModel>();
         else
             throw new Exception("Something went wrong when calling API");
     }
