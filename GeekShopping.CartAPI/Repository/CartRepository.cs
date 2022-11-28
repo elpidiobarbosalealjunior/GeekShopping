@@ -19,7 +19,15 @@ public class CartRepository : ICartRepository
 
     public async Task<bool> ApplyCoupon(string userId, string couponCode)
     {
-        throw new NotImplementedException();
+        var header = await _context.CartHeaders.FirstOrDefaultAsync(x => x.UserId == userId);
+        if (header != null)
+        {
+            header.CouponCode = couponCode;
+            _context.CartHeaders.Update(header);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 
     public async Task<bool> ClearCart(string userId)
@@ -29,7 +37,7 @@ public class CartRepository : ICartRepository
         {
             _context.CartDetails.RemoveRange(_context.CartDetails.Where(x => x.CartHeaderId == cartHeader.CartHeaderId));
             _context.CartHeaders.Remove(cartHeader);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return true;
         }
         return false;
@@ -48,7 +56,15 @@ public class CartRepository : ICartRepository
 
     public async Task<bool> RemoveCoupon(string userId)
     {
-        throw new NotImplementedException();
+        var header = await _context.CartHeaders.FirstOrDefaultAsync(x => x.UserId == userId);
+        if (header != null)
+        {
+            header.CouponCode = "";
+            _context.CartHeaders.Update(header);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 
     public async Task<bool> RemoveFromByDetailId(int cartDetailId)

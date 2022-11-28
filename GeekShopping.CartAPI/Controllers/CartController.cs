@@ -47,4 +47,20 @@ public class CartController : ControllerBase
         if (!status) return BadRequest();
         return Ok(status);
     }
+
+    [HttpPost("apply-coupon")]
+    public async Task<ActionResult<CartVO>> ApplyCoupon(CartHeaderVO header)
+    {
+        var status = await _cartRepository.ApplyCoupon(header.UserId, header.CouponCode);
+        if (status == false) return NotFound();
+        return Ok(status);
+    }
+
+    [HttpDelete("remove-coupon/{userId}")]
+    public async Task<ActionResult<CartVO>> RemoveCoupon(string userId)
+    {
+        var status = await _cartRepository.RemoveCoupon(userId);
+        if (status == null) return NotFound();
+        return Ok(status);
+    }
 }

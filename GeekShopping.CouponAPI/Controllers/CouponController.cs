@@ -17,8 +17,8 @@ public class CouponController : ControllerBase
     [HttpGet("{couponCode}")]
     public async Task<ActionResult<CouponVO>> GetByCouponCode(string couponCode)
     {
-        var cart = await _couponRepository.GetByCouponCode(couponCode);
-        if (cart == null) return NotFound();
-        return Ok(cart);
+        var coupon = await _couponRepository.GetByCouponCode(couponCode);
+        if (coupon == null) return NotFound();
+        return Ok(coupon);
     }
 }
