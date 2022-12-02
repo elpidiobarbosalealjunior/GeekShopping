@@ -91,6 +91,12 @@
                                 Purchase Amount: @string.Format("{0:c}", Model.CartHeader.PurchaseAmount)
                                 <br />
                             </span>
+                            @if(Model.CartHeader.DiscountAmount > 0){
+                                <span class="text-success">
+                                    Discount Amount: @string.Format("{0:c}", Model.CartHeader.DiscountAmount)
+                                    <br />
+                                </span>
+                            }
                         </div>
                     </div>
                 </div>
@@ -98,8 +104,8 @@
                     <div class="col-6 col-md-3 offset-md-6">
                     </div>
                     <div class="col-6 col-md-3">
-                        <a asp-action="Checkout" class="btn btn-success form-control">
-                            <span>Checkout</span>
+                        <a asp-action="CheckoutIndex" class="btn btn-success form-control">
+                            Checkout
                         </a>
                     </div>
                 </div>

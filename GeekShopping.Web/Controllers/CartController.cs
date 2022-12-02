@@ -10,17 +10,45 @@ public class CartController : Controller
 {
     private readonly IProductService _productService;
     private readonly ICartService _cartService;
+    private readonly ICouponService _couponService;
 
-    public CartController(IProductService productService, ICartService cartService)
+    public CartController(IProductService productService, ICartService cartService, ICouponService couponService)
     {
         _productService = productService;
         _cartService = cartService;
+        _couponService = couponService;
     }
 
     [Authorize]
     public async Task<IActionResult> CartIndex()
     {            
         return View(await FindUserCart());
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> CheckoutIndex()
+    {
+        return View(await FindUserCart());
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> CheckoutIndex(CartViewModel model)
+    {
+        var token = await HttpContext.GetTokenAsync("access_token");
+        var response = await _cartService.Checkout(model.CartHeader, token);
+        if(response != null)
+        {
+            return RedirectToAction(nameof(ConfirmationIndex));
+        }
+        return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ConfirmationIndex()
+    {
+        return View();
     }
 
     [HttpPost]
@@ -71,10 +99,19 @@ public class CartController : Controller
         var response = await _cartService.FindByUserId(userId ?? "", token ?? "");
         if (response?.CartHeader != null)
         {
+            if (!string.IsNullOrEmpty(response.CartHeader.CouponCode))
+            {
+                var coupon = await _couponService.GetByCouponCode(response.CartHeader.CouponCode, token);
+                if(coupon?.CouponCode != null)
+                {
+                    response.CartHeader.DiscountAmount = coupon.DiscountAmount;
+                }
+            }
             foreach (var detail in response.CartDetails)
             {
                 response.CartHeader.PurchaseAmount += (detail.Product.Price * detail.Count);
             }
+            response.CartHeader.PurchaseAmount -= response.CartHeader.DiscountAmount;
         }
 
         return response ?? new CartViewModel();

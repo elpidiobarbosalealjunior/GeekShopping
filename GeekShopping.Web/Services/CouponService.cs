@@ -19,6 +19,7 @@ public class CouponService : ICouponService
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.GetAsync($"{BasePath}/{couponCode}");
+        if (response.StatusCode != System.Net.HttpStatusCode.OK) return new CouponViewModel();
         return await response.ReadContentAs<CouponViewModel>();
     }
 }
