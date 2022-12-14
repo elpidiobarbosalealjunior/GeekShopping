@@ -77,7 +77,8 @@ public class CartController : ControllerBase
         if (cart == null) return NotFound();
         checkoutHeaderVO.CartDetails = cart.CartDetails;
         checkoutHeaderVO.DateTime = DateTime.UtcNow;
-        _rabbitMQMessageSender.SendMessage(checkoutHeaderVO, "checkout_queue");
+        _rabbitMQMessageSender.SendMessage(checkoutHeaderVO, "checkoutqueue");
+        await _cartRepository.ClearCart(checkoutHeaderVO.UserId);
         return Ok(checkoutHeaderVO);
     }
 }

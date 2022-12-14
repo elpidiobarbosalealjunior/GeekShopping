@@ -29,7 +29,7 @@ public class RabbitMQCheckoutConsumer : BackgroundService
         };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
-        _channel.QueueDeclare(queue: "checkout_queue", false, false, false, arguments: null);
+        _channel.QueueDeclare(queue: "checkoutqueue", false, false, false, arguments: null);
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -43,7 +43,7 @@ public class RabbitMQCheckoutConsumer : BackgroundService
             ProcessarOrder(vo).GetAwaiter().GetResult();
             _channel.BasicAck(evt.DeliveryTag, false);
         };
-        _channel.BasicConsume("checkout_queue", false, consumer);
+        _channel.BasicConsume("checkoutqueue", false, consumer);
         return Task.CompletedTask;
     }
 
